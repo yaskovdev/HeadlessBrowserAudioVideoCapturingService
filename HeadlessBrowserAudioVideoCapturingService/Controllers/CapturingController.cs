@@ -13,28 +13,20 @@ namespace HeadlessBrowserAudioVideoCapturingService.Controllers;
 public class CapturingController
 {
     private readonly string _workingDirectory;
-    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly ILogger<CapturingController> _logger;
 
-    public CapturingController(ILogger<WeatherForecastController> logger)
+    public CapturingController(ILogger<CapturingController> logger)
     {
         _workingDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "media");
         _logger = logger;
     }
 
     [HttpPost("/start")]
-    public void Start([FromBody] CapturingConfig config)
+    public void Start([FromBody] StartCaptureRequest request)
     {
         AsyncContext.Run(async delegate
         {
             _logger.LogInformation("Started capturing");
-            Cef.EnableWaitForBrowsersToClose();
-            if (!Cef.IsInitialized)
-            {
-                var settings = new CefSettings();
-                settings.CefCommandLineArgs.Add("autoplay-policy", "no-user-gesture-required");
-                settings.EnableAudio();
-                Cef.Initialize(settings);
-            }
             using var browser = new ChromiumWebBrowser("https://www.youtube.com/embed/WPTxkU38BKg?autoplay=1");
             browser.AudioHandler = new CustomAudioHandler(_workingDirectory);
             var initialLoadResponse = await browser.WaitForInitialLoadAsync();
@@ -50,9 +42,7 @@ public class CapturingController
             };
             var response = await page.StartScreencastAsync(StartScreencastFormat.Png);
             AssertSuccess(response.Success, $"Cannot start screencast, DevTools response is {response.ResponseAsJsonString}");
-            await Task.Delay(config.DurationMs);
-            Cef.WaitForBrowsersToClose();
-            Cef.Shutdown();
+            await Task.Delay(request.CaptureDurationMs);
             _logger.LogInformation("Finished capturing");
         });
     }
