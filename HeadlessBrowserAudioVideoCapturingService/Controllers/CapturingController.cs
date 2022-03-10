@@ -1,4 +1,5 @@
 ﻿using CefSharp;
+using CefSharp.DevTools;
 using CefSharp.DevTools.Page;
 using CefSharp.OffScreen;
 using HeadlessBrowserAudioVideoCapturingService.Model;
@@ -34,17 +35,21 @@ public class CapturingController
                 $"Page load failed with ErrorCode:{initialLoadResponse.ErrorCode}, HttpStatusCode:{initialLoadResponse.HttpStatusCode}");
             var devToolsClient = browser.GetDevToolsClient();
             var page = devToolsClient.Page;
-            page.ScreencastFrame += async (_, args) =>
-            {
-                await page.ScreencastFrameAckAsync(args.SessionId);
-                var path = Path.Combine(_workingDirectory, $"frame_{DateTime.UtcNow.Ticks}.png");
-                await File.WriteAllBytesAsync(path, args.Data);
-            };
+            page.ScreencastFrame += OnScreencastFrame;
             var response = await page.StartScreencastAsync(StartScreencastFormat.Png);
             AssertSuccess(response.Success, $"Cannot start screencast, DevTools response is {response.ResponseAsJsonString}");
             await Task.Delay(request.CaptureDurationMs);
+            page.ScreencastFrame -= OnScreencastFrame;
             _logger.LogInformation("Finished capturing");
         });
+    }
+
+    private async void OnScreencastFrame(object? sender, ScreencastFrameEventArgs args)
+    {
+        var client = (DevToolsClient)sender;
+        await client.Page.ScreencastFrameAckAsync(args.SessionId);
+        var path = Path.Combine(_workingDirectory, $"frame_{DateTime.UtcNow.Ticks}.png");
+        await File.WriteAllBytesAsync(path, args.Data);
     }
 
     private static void AssertSuccess(bool success, string errorMessage)
