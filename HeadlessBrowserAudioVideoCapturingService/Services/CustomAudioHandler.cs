@@ -45,7 +45,7 @@ public class CustomAudioHandler : AudioHandler
                     }
                 }
             }
-            _rawCapturedAudio.Write(samples, 0, samples.Length);
+            // _rawCapturedAudio.Write(samples, 0, samples.Length);
         }
     }
 
