@@ -1,6 +1,5 @@
-using CefSharp;
-using CefSharp.OffScreen;
-using HeadlessBrowserAudioVideoCapturingService.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 // Console.WriteLine($"Before run by thread {Environment.CurrentManagedThreadId}");
 // Cef.EnableWaitForBrowsersToClose();

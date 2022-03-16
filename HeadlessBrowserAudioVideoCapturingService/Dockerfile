@@ -31,7 +31,7 @@ ENTRYPOINT ["dotnet", "HeadlessBrowserAudioVideoCapturingService.dll"]
 #RUN dotnet publish -c Release -r linux-x64 -o /sln/artifacts -p:PublishTrimmed=True
 #
 ## The deployment image
-#FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.3-focal-amd64
+#FROM mcr.microsoft.com/dotnet/runtime:6.0.3-focal-amd64
 #
 ## Copy across the published app
 #WORKDIR /app
