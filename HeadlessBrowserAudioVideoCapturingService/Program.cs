@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using CefSharp;
+using CefSharp.OffScreen;
 
-// Console.WriteLine($"Before run by thread {Environment.CurrentManagedThreadId}");
-// Cef.EnableWaitForBrowsersToClose();
-// var settings = new CefSettings();
-// settings.CefCommandLineArgs.Add("autoplay-policy", "no-user-gesture-required");
-// settings.EnableAudio();
-// Cef.Initialize(settings);
+Console.WriteLine($"Before run by thread {Environment.CurrentManagedThreadId}");
+Cef.EnableWaitForBrowsersToClose();
+var settings = new CefSettings();
+settings.CefCommandLineArgs.Add("autoplay-policy", "no-user-gesture-required");
+settings.EnableAudio();
+Cef.Initialize(settings);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +29,7 @@ app.MapControllers();
 
 app.Run();
 
-// Console.WriteLine($"After shutdown by thread {Environment.CurrentManagedThreadId}");
-//
-// Cef.WaitForBrowsersToClose();
-// Cef.Shutdown();
+Console.WriteLine($"After shutdown by thread {Environment.CurrentManagedThreadId}");
+
+Cef.WaitForBrowsersToClose();
+Cef.Shutdown();

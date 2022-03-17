@@ -22,6 +22,11 @@ public class CapturingController
         _logger = logger;
     }
 
+    [HttpGet("/status")]
+    public void Status()
+    {
+    }
+
     [HttpPost("/start")]
     public void Start([FromBody] StartCaptureRequest request)
     {
