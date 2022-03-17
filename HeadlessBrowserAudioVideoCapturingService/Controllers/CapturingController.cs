@@ -53,8 +53,8 @@ public class CapturingController
     {
         var client = (DevToolsClient)sender;
         await client.Page.ScreencastFrameAckAsync(args.SessionId);
-        // var path = Path.Combine(_workingDirectory, $"frame_{DateTime.UtcNow.Ticks}.png");
-        // await File.WriteAllBytesAsync(path, args.Data);
+        var path = Path.Combine(_workingDirectory, $"frame_{DateTime.UtcNow.Ticks}.png");
+        await File.WriteAllBytesAsync(path, args.Data);
     }
 
     private static void AssertSuccess(bool success, string errorMessage)
