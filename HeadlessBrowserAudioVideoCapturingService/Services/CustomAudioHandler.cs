@@ -14,7 +14,7 @@ public class CustomAudioHandler : AudioHandler
 
     public CustomAudioHandler(string workingDirectory)
     {
-        var dest = Path.Combine(workingDirectory, $"audio_{DateTime.UtcNow.Ticks}.pcm");
+        var dest = Path.Combine(workingDirectory, $"audio_{Guid.NewGuid()}.pcm");
         _rawCapturedAudio = new FileStream(dest, FileMode.Create, FileAccess.Write);
     }
 
